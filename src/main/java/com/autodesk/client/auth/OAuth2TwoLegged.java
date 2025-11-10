@@ -37,10 +37,9 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.joda.time.DateTime;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import java.time.Instant;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.util.*;
@@ -132,7 +131,7 @@ public class OAuth2TwoLegged implements Authentication {
 
     /**
      * OAuth2TwoLegged Constructor
-     * 
+     *
      * @param clientId       - the client id of the application
      * @param clientSecret   - the client secret of the application
      * @param selectedScopes - the scope permissions used to generated access token
@@ -197,7 +196,7 @@ public class OAuth2TwoLegged implements Authentication {
 
     /**
      * Get the access token in a 2-legged flow
-     * 
+     *
      * @return
      */
     public Credentials authenticate() throws Exception {
@@ -219,19 +218,17 @@ public class OAuth2TwoLegged implements Authentication {
             Credentials response = null;
             try {
                 String bodyResponse = post(url, body, new HashMap<String, String>());
-                JSONObject jsonObject = null;
-
-                // get the access token from json
+                // parse JSON using Jackson
                 try {
-                    jsonObject = (JSONObject) new JSONParser().parse(bodyResponse);
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String, Object> jsonMap = mapper.readValue(bodyResponse, new TypeReference<Map<String, Object>>() {});
 
-                    String access_token = (String) jsonObject.get("access_token");
-                    // calculate "expires at"
-                    long expires_in = (long) jsonObject.get("expires_in");
-                    DateTime later = DateTime.now().plusSeconds((int) expires_in);
-                    Long expiresAt = later.toDate().getTime();
+                    String access_token = (String) jsonMap.get("access_token");
+                    Number expiresInNum = (Number) jsonMap.get("expires_in");
+                    long expires_in = expiresInNum != null ? expiresInNum.longValue() : 0L;
+                    long expiresAt = Instant.now().plusSeconds(expires_in).toEpochMilli();
 
-                    // should we delete the last this.credentials?
+                    // update credentials
                     this.credentials = new Credentials(access_token, expiresAt);
                     response = this.credentials;
 
@@ -248,9 +245,8 @@ public class OAuth2TwoLegged implements Authentication {
                             }
                         }
                     }, (expires_in - 3 * 60) * 1000);
-
-                } catch (ParseException e) {
-                    throw new RuntimeException("Unable to parse json " + body);
+                } catch (IOException e) {
+                    throw new RuntimeException("Unable to parse json " + bodyResponse);
                 }
             } catch (IOException e) {
                 System.err.println("Exception when trying to get access token");
