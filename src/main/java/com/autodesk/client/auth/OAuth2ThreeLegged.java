@@ -38,10 +38,9 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.joda.time.DateTime;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import java.time.Instant;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.util.*;
@@ -137,7 +136,7 @@ public class OAuth2ThreeLegged implements Authentication {
 
     /**
      * OAuth2ThreeLegged Constructor
-     * 
+     *
      * @param clientId       - the client id of the application
      * @param clientSecret   - the client secret of the application
      * @param redirectUri    - the redirect URI of the application
@@ -147,7 +146,7 @@ public class OAuth2ThreeLegged implements Authentication {
      * @throws Exception
      */
     public OAuth2ThreeLegged(String clientId, String clientSecret, String redirectUri, List<String> selectedScopes,
-            Boolean autoRefresh) throws Exception {
+                             Boolean autoRefresh) throws Exception {
 
         this.flow = OAuthFlow.accessCode;
         this.scopes = new ArrayList<String>();
@@ -185,7 +184,7 @@ public class OAuth2ThreeLegged implements Authentication {
     }
 
     public void applyToParams(List<Pair> queryParams, Map<String, String> headerParams,
-            ThreeLeggedCredentials credentials) {
+                              ThreeLeggedCredentials credentials) {
         if (credentials != null && credentials.getAccessToken() != null) {
             headerParams.put("Authorization", "Bearer " + credentials.getAccessToken());
         }
@@ -209,7 +208,7 @@ public class OAuth2ThreeLegged implements Authentication {
     /**
      * Get the authentication url for a 3-legged flow. Redirect the user to this url
      * for authorizing your application.
-     * 
+     *
      * @return
      */
     public String getAuthenticationUrl() throws Exception {
@@ -233,7 +232,7 @@ public class OAuth2ThreeLegged implements Authentication {
 
     /**
      * Get the access token for a 3-legged flow
-     * 
+     *
      * @return
      */
     public ThreeLeggedCredentials authenticate(String code) throws Exception {
@@ -255,26 +254,21 @@ public class OAuth2ThreeLegged implements Authentication {
             ThreeLeggedCredentials response = null;
             try {
                 String responseBody = post(this.tokenUrl, formParams, headers);
-
-                JSONObject jsonObject = null;
-
-                // get the access token from json
+                // Parse JSON using Jackson
                 try {
-                    jsonObject = (JSONObject) new JSONParser().parse(responseBody);
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String, Object> jsonMap = mapper.readValue(responseBody, new TypeReference<Map<String, Object>>() {});
 
-                    String access_token = (String) jsonObject.get("access_token");
-                    String refresh_token = (String) jsonObject.get("refresh_token");
-                    // calculate "expires at"
-                    long expires_in = (long) jsonObject.get("expires_in");
-                    DateTime later = DateTime.now().plusSeconds((int) expires_in);
-                    Long expiresAt = later.toDate().getTime();
+                    String access_token = (String) jsonMap.get("access_token");
+                    String refresh_token = (String) jsonMap.get("refresh_token");
+                    Number expiresInNum = (Number) jsonMap.get("expires_in");
+                    long expires_in = expiresInNum != null ? expiresInNum.longValue() : 0L;
+                    long expiresAt = Instant.now().plusSeconds(expires_in).toEpochMilli();
 
                     response = new ThreeLeggedCredentials(access_token, expiresAt, refresh_token);
-
-                } catch (ParseException e) {
+                } catch (IOException e) {
                     throw new RuntimeException("Unable to parse json " + responseBody);
                 }
-
             } catch (IOException e) {
                 System.err.println("Exception when trying to get access token");
                 e.printStackTrace();
@@ -287,7 +281,7 @@ public class OAuth2ThreeLegged implements Authentication {
 
     /**
      * Refresh the access token for a 3-legged flow
-     * 
+     *
      * @return
      */
     public ThreeLeggedCredentials refreshAccessToken(String refreshToken) {
@@ -304,21 +298,18 @@ public class OAuth2ThreeLegged implements Authentication {
         ThreeLeggedCredentials response = null;
         try {
             String responseBody = post(this.refreshTokenUrl, formParams, headers);
-
-            JSONObject jsonObject = null;
-
-            // get the access token from json
+            // Parse JSON using Jackson
             try {
-                jsonObject = (JSONObject) new JSONParser().parse(responseBody);
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, Object> jsonMap = mapper.readValue(responseBody, new TypeReference<Map<String, Object>>() {});
 
-                String access_token = (String) jsonObject.get("access_token");
-                final String refresh_token = (String) jsonObject.get("refresh_token");
-                // calculate "expires at"
-                long expires_in = (long) jsonObject.get("expires_in");
-                DateTime later = DateTime.now().plusSeconds((int) expires_in);
-                Long expiresAt = later.toDate().getTime();
+                String access_token = (String) jsonMap.get("access_token");
+                final String refresh_token = (String) jsonMap.get("refresh_token");
+                Number expiresInNum = (Number) jsonMap.get("expires_in");
+                long expires_in = expiresInNum != null ? expiresInNum.longValue() : 0L;
+                long expiresAt = Instant.now().plusSeconds(expires_in).toEpochMilli();
 
-                // should we delete the last this.credentials?
+                // update credentials
                 this.credentials = new ThreeLeggedCredentials(access_token, expiresAt, refresh_token);
                 response = this.credentials;
 
@@ -335,11 +326,9 @@ public class OAuth2ThreeLegged implements Authentication {
                         }
                     }
                 }, (expires_in - 3 * 60) * 1000);
-
-            } catch (ParseException e) {
+            } catch (IOException e) {
                 throw new RuntimeException("Unable to parse json " + responseBody);
             }
-
         } catch (IOException e) {
             System.err.println("Exception when trying to refresh token");
             e.printStackTrace();
@@ -354,6 +343,6 @@ public class OAuth2ThreeLegged implements Authentication {
         return (credentials != null)
                 && (credentials.getExpiresAt() != null && (credentials.getExpiresAt() > (new Date().getTime())));
     }
-     
-    
+
+
 }
