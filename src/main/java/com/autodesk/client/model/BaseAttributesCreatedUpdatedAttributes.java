@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.joda.time.DateTime;
+import java.time.OffsetDateTime;
 
 
 /**
@@ -39,133 +39,133 @@ import org.joda.time.DateTime;
  */
 
 public class BaseAttributesCreatedUpdatedAttributes   {
-  @JsonProperty("createTime")
-  private DateTime createTime = null;
+    @JsonProperty("createTime")
+    private OffsetDateTime createTime = null;
 
-  @JsonProperty("createUserId")
-  private String createUserId = null;
+    @JsonProperty("createUserId")
+    private String createUserId = null;
 
-  @JsonProperty("lastModifiedTime")
-  private DateTime lastModifiedTime = null;
+    @JsonProperty("lastModifiedTime")
+    private OffsetDateTime lastModifiedTime = null;
 
-  @JsonProperty("lastModifiedUserId")
-  private String lastModifiedUserId = null;
+    @JsonProperty("lastModifiedUserId")
+    private String lastModifiedUserId = null;
 
-  public BaseAttributesCreatedUpdatedAttributes createTime(DateTime createTime) {
-    this.createTime = createTime;
-    return this;
-  }
-
-   /**
-   * Get createTime
-   * @return createTime
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "")
-  public DateTime getCreateTime() {
-    return createTime;
-  }
-
-  public void setCreateTime(DateTime createTime) {
-    this.createTime = createTime;
-  }
-
-  public BaseAttributesCreatedUpdatedAttributes createUserId(String createUserId) {
-    this.createUserId = createUserId;
-    return this;
-  }
-
-   /**
-   * Get createUserId
-   * @return createUserId
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "")
-  public String getCreateUserId() {
-    return createUserId;
-  }
-
-  public void setCreateUserId(String createUserId) {
-    this.createUserId = createUserId;
-  }
-
-  public BaseAttributesCreatedUpdatedAttributes lastModifiedTime(DateTime lastModifiedTime) {
-    this.lastModifiedTime = lastModifiedTime;
-    return this;
-  }
-
-   /**
-   * Get lastModifiedTime
-   * @return lastModifiedTime
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "")
-  public DateTime getLastModifiedTime() {
-    return lastModifiedTime;
-  }
-
-  public void setLastModifiedTime(DateTime lastModifiedTime) {
-    this.lastModifiedTime = lastModifiedTime;
-  }
-
-  public BaseAttributesCreatedUpdatedAttributes lastModifiedUserId(String lastModifiedUserId) {
-    this.lastModifiedUserId = lastModifiedUserId;
-    return this;
-  }
-
-   /**
-   * Get lastModifiedUserId
-   * @return lastModifiedUserId
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "")
-  public String getLastModifiedUserId() {
-    return lastModifiedUserId;
-  }
-
-  public void setLastModifiedUserId(String lastModifiedUserId) {
-    this.lastModifiedUserId = lastModifiedUserId;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
+    public BaseAttributesCreatedUpdatedAttributes createTime(OffsetDateTime createTime) {
+        this.createTime = createTime;
+        return this;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    /**
+     * Get createTime
+     * @return createTime
+     **/
+    @ApiModelProperty(example = "null", required = true, value = "")
+    public OffsetDateTime getCreateTime() {
+        return createTime;
     }
-    BaseAttributesCreatedUpdatedAttributes baseAttributesCreatedUpdatedAttributes = (BaseAttributesCreatedUpdatedAttributes) o;
-    return Objects.equals(this.createTime, baseAttributesCreatedUpdatedAttributes.createTime) &&
-        Objects.equals(this.createUserId, baseAttributesCreatedUpdatedAttributes.createUserId) &&
-        Objects.equals(this.lastModifiedTime, baseAttributesCreatedUpdatedAttributes.lastModifiedTime) &&
-        Objects.equals(this.lastModifiedUserId, baseAttributesCreatedUpdatedAttributes.lastModifiedUserId);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(createTime, createUserId, lastModifiedTime, lastModifiedUserId);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class BaseAttributesCreatedUpdatedAttributes {\n");
-    
-    sb.append("    createTime: ").append(toIndentedString(createTime)).append("\n");
-    sb.append("    createUserId: ").append(toIndentedString(createUserId)).append("\n");
-    sb.append("    lastModifiedTime: ").append(toIndentedString(lastModifiedTime)).append("\n");
-    sb.append("    lastModifiedUserId: ").append(toIndentedString(lastModifiedUserId)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
+    public void setCreateTime(OffsetDateTime createTime) {
+        this.createTime = createTime;
     }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+    public BaseAttributesCreatedUpdatedAttributes createUserId(String createUserId) {
+        this.createUserId = createUserId;
+        return this;
+    }
+
+    /**
+     * Get createUserId
+     * @return createUserId
+     **/
+    @ApiModelProperty(example = "null", required = true, value = "")
+    public String getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public BaseAttributesCreatedUpdatedAttributes lastModifiedTime(OffsetDateTime lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+        return this;
+    }
+
+    /**
+     * Get lastModifiedTime
+     * @return lastModifiedTime
+     **/
+    @ApiModelProperty(example = "null", required = true, value = "")
+    public OffsetDateTime getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(OffsetDateTime lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public BaseAttributesCreatedUpdatedAttributes lastModifiedUserId(String lastModifiedUserId) {
+        this.lastModifiedUserId = lastModifiedUserId;
+        return this;
+    }
+
+    /**
+     * Get lastModifiedUserId
+     * @return lastModifiedUserId
+     **/
+    @ApiModelProperty(example = "null", required = true, value = "")
+    public String getLastModifiedUserId() {
+        return lastModifiedUserId;
+    }
+
+    public void setLastModifiedUserId(String lastModifiedUserId) {
+        this.lastModifiedUserId = lastModifiedUserId;
+    }
+
+
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BaseAttributesCreatedUpdatedAttributes baseAttributesCreatedUpdatedAttributes = (BaseAttributesCreatedUpdatedAttributes) o;
+        return Objects.equals(this.createTime, baseAttributesCreatedUpdatedAttributes.createTime) &&
+                Objects.equals(this.createUserId, baseAttributesCreatedUpdatedAttributes.createUserId) &&
+                Objects.equals(this.lastModifiedTime, baseAttributesCreatedUpdatedAttributes.lastModifiedTime) &&
+                Objects.equals(this.lastModifiedUserId, baseAttributesCreatedUpdatedAttributes.lastModifiedUserId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(createTime, createUserId, lastModifiedTime, lastModifiedUserId);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class BaseAttributesCreatedUpdatedAttributes {\n");
+
+        sb.append("    createTime: ").append(toIndentedString(createTime)).append("\n");
+        sb.append("    createUserId: ").append(toIndentedString(createUserId)).append("\n");
+        sb.append("    lastModifiedTime: ").append(toIndentedString(lastModifiedTime)).append("\n");
+        sb.append("    lastModifiedUserId: ").append(toIndentedString(lastModifiedUserId)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
 
