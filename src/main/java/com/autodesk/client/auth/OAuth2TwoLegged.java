@@ -37,6 +37,8 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -150,7 +152,7 @@ public class OAuth2TwoLegged implements Authentication {
 
         this.name = "oauth2_application";
         this.type = "oauth2";
-        this.tokenUrl = Configuration.getDefaultApiClient().getBasePath() + "/authentication/v1/authenticate";
+        this.tokenUrl = Configuration.getDefaultApiClient().getBasePath() + "/authentication/v2/token";
         this.scopes.add("data:read");
         this.scopes.add("data:write");
         this.scopes.add("data:create");
@@ -207,17 +209,20 @@ public class OAuth2TwoLegged implements Authentication {
 
             Map<String, String> body = new HashMap<>();
             body.put("grant_type", "client_credentials");
-            body.put("client_id", this.clientId);
-            body.put("client_secret", this.clientSecret);
 
             String scopeStr = getScopes();
             if (!scopeStr.isEmpty()) {
                 body.put("scope", scopeStr);
             }
 
+            String encodedCredentials = Base64.getEncoder().encodeToString((this.clientId + ":" + this.clientSecret).getBytes(StandardCharsets.UTF_8));
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Authorization", "Basic " + encodedCredentials);
+            headers.put("Content-Type", "application/x-www-form-urlencoded");
+
             Credentials response = null;
             try {
-                String bodyResponse = post(url, body, new HashMap<String, String>());
+                String bodyResponse = post(url, body, headers);
                 // parse JSON using Jackson
                 try {
                     ObjectMapper mapper = new ObjectMapper();
