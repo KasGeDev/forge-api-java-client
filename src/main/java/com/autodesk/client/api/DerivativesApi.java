@@ -45,7 +45,7 @@ import com.autodesk.client.model.JobPayload;
 import com.autodesk.client.model.Manifest;
 import com.autodesk.client.model.Metadata;
 import com.autodesk.client.model.Result;
-import com.sun.jersey.api.client.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 public class DerivativesApi {
 	private ApiClient apiClient;

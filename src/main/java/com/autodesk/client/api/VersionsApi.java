@@ -24,7 +24,7 @@
 
 package com.autodesk.client.api;
 
-import com.sun.jersey.api.client.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import com.autodesk.client.ApiException;
 import com.autodesk.client.ApiClient;

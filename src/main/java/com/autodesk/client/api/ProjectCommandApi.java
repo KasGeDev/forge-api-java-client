@@ -4,7 +4,7 @@ import com.autodesk.client.*;
 import com.autodesk.client.auth.Authentication;
 import com.autodesk.client.auth.Credentials;
 import com.autodesk.client.model.*;
-import com.sun.jersey.api.client.GenericType;
+import jakarta.ws.rs.core.GenericType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
