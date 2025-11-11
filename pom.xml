@@ -6,7 +6,7 @@
     <!-- Use your own coordinates to avoid collisions with com.autodesk -->
     <groupId>com.autodesk</groupId>
     <artifactId>forge-java-sdk</artifactId>
-    <version>1.0.2-delta.1</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
     <name>forge-java-sdk-jakarta</name>
     <description>SDK of Autodesk Forge</description>
