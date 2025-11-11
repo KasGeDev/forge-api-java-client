@@ -226,6 +226,8 @@
                 <configuration>
                     <source>17</source>
                     <failOnError>false</failOnError>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
                 </configuration>
             </plugin>
 
